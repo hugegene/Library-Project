@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Lib24Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BookIssued">
+          <Key>
+            <PropertyRef Name="TransactionNo" />
+            <PropertyRef Name="ISBN" />
+          </Key>
+          <Property Name="TransactionNo" Type="int" Nullable="false" />
+          <Property Name="ISBN" Type="nvarchar" MaxLength="13" Nullable="false" />
+          <Property Name="BookTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DateBorrow" Type="datetime" Nullable="false" />
+          <Property Name="DateDue" Type="datetime" Nullable="false" />
+          <Property Name="DateActualReturn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="BookList">
+          <Key>
+            <PropertyRef Name="BookTitle" />
+            <PropertyRef Name="ISBN" />
+          </Key>
+          <Property Name="BookTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Author" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Publisher" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ISBN" Type="nvarchar" MaxLength="13" Nullable="false" />
+          <Property Name="Language" Type="nvarchar" MaxLength="13" Nullable="false" />
+          <Property Name="Genre" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TotalStock" Type="smallint" Nullable="false" />
+          <Property Name="Loaned" Type="smallint" Nullable="false" />
+          <Property Name="BookCost" Type="float" Nullable="false" />
+          <Property Name="Shelf" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SA45Team13bLibrary2.dbo.BookRequested' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BookRequested">
+          <Key>
+            <PropertyRef Name="RequestedBookTitle" />
+            <PropertyRef Name="RequestedBookAuthor" />
+          </Key>
+          <Property Name="RequestedBookTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="RequestedBookAuthor" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RequestedBookRemarks" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="DueTran">
+          <Key>
+            <PropertyRef Name="DueTranID" />
+          </Key>
+          <Property Name="DueTranID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="DueAmount" Type="real" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="IssueTran">
+          <Key>
+            <PropertyRef Name="TransactionNo" />
+          </Key>
+          <Property Name="TransactionNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LibraryMember">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Age" Type="smallint" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="65" Nullable="false" />
+          <Property Name="PostalCode" Type="nvarchar" MaxLength="6" />
+          <Property Name="DocumentNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DocumentType" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="9" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="AltPhoneNumber" Type="nvarchar" MaxLength="9" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK__BookIssue__Trans__6E01572D">
+          <End Role="IssueTran" Type="Self.IssueTran" Multiplicity="1" />
+          <End Role="BookIssued" Type="Self.BookIssued" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IssueTran">
+              <PropertyRef Name="TransactionNo" />
+            </Principal>
+            <Dependent Role="BookIssued">
+              <PropertyRef Name="TransactionNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__BookIssued__68487DD7">
+          <End Role="BookList" Type="Self.BookList" Multiplicity="1" />
+          <End Role="BookIssued" Type="Self.BookIssued" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookList">
+              <PropertyRef Name="BookTitle" />
+              <PropertyRef Name="ISBN" />
+            </Principal>
+            <Dependent Role="BookIssued">
+              <PropertyRef Name="BookTitle" />
+              <PropertyRef Name="ISBN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DueTran__Custome__36B12243">
+          <End Role="LibraryMember" Type="Self.LibraryMember" Multiplicity="1" />
+          <End Role="DueTran" Type="Self.DueTran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryMember">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="DueTran">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__IssueTran__Custo__35BCFE0A">
+          <End Role="LibraryMember" Type="Self.LibraryMember" Multiplicity="1" />
+          <End Role="IssueTran" Type="Self.IssueTran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryMember">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="IssueTran">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Lib24ModelStoreContainer">
+          <EntitySet Name="BookIssued" EntityType="Self.BookIssued" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookList" EntityType="Self.BookList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DueTran" EntityType="Self.DueTran" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IssueTran" EntityType="Self.IssueTran" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LibraryMember" EntityType="Self.LibraryMember" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookRequested" EntityType="Self.BookRequested" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BookRequested].[RequestedBookTitle] AS [RequestedBookTitle], 
+    [BookRequested].[RequestedBookAuthor] AS [RequestedBookAuthor], 
+    [BookRequested].[RequestedBookRemarks] AS [RequestedBookRemarks]
+    FROM [dbo].[BookRequested] AS [BookRequested]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__BookIssue__Trans__6E01572D" Association="Self.FK__BookIssue__Trans__6E01572D">
+            <End Role="IssueTran" EntitySet="IssueTran" />
+            <End Role="BookIssued" EntitySet="BookIssued" />
+          </AssociationSet>
+          <AssociationSet Name="FK__BookIssued__68487DD7" Association="Self.FK__BookIssued__68487DD7">
+            <End Role="BookList" EntitySet="BookList" />
+            <End Role="BookIssued" EntitySet="BookIssued" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DueTran__Custome__36B12243" Association="Self.FK__DueTran__Custome__36B12243">
+            <End Role="LibraryMember" EntitySet="LibraryMember" />
+            <End Role="DueTran" EntitySet="DueTran" />
+          </AssociationSet>
+          <AssociationSet Name="FK__IssueTran__Custo__35BCFE0A" Association="Self.FK__IssueTran__Custo__35BCFE0A">
+            <End Role="LibraryMember" EntitySet="LibraryMember" />
+            <End Role="IssueTran" EntitySet="IssueTran" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Lib24Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BookIssued">
+          <Key>
+            <PropertyRef Name="TransactionNo" />
+            <PropertyRef Name="ISBN" />
+          </Key>
+          <Property Name="TransactionNo" Type="Int32" Nullable="false" />
+          <Property Name="ISBN" Type="String" MaxLength="13" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateBorrow" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateDue" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateActualReturn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BookList" Relationship="Self.FK__BookIssued__68487DD7" FromRole="BookIssued" ToRole="BookList" />
+          <NavigationProperty Name="IssueTran" Relationship="Lib24Model.FK__BookIssue__Trans__6E01572D" FromRole="BookIssued" ToRole="IssueTran" />
+        </EntityType>
+        <EntityType Name="BookList">
+          <Key>
+            <PropertyRef Name="BookTitle" />
+            <PropertyRef Name="ISBN" />
+          </Key>
+          <Property Name="BookTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Publisher" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ISBN" Type="String" MaxLength="13" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Language" Type="String" MaxLength="13" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Genre" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TotalStock" Type="Int16" Nullable="false" />
+          <Property Name="Loaned" Type="Int16" Nullable="false" />
+          <Property Name="BookCost" Type="Double" Nullable="false" />
+          <Property Name="Shelf" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="BookIssueds" Relationship="Self.FK__BookIssued__68487DD7" FromRole="BookList" ToRole="BookIssued" />
+        </EntityType>
+        <EntityType Name="DueTran">
+          <Key>
+            <PropertyRef Name="DueTranID" />
+          </Key>
+          <Property Name="DueTranID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="DueAmount" Type="Single" />
+          <Property Name="Remarks" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="LibraryMember" Relationship="Self.FK__DueTran__Custome__36B12243" FromRole="DueTran" ToRole="LibraryMember" />
+        </EntityType>
+        <EntityType Name="IssueTran">
+          <Key>
+            <PropertyRef Name="TransactionNo" />
+          </Key>
+          <Property Name="TransactionNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="LibraryMember" Relationship="Self.FK__IssueTran__Custo__35BCFE0A" FromRole="IssueTran" ToRole="LibraryMember" />
+          <NavigationProperty Name="BookIssueds" Relationship="Lib24Model.FK__BookIssue__Trans__6E01572D" FromRole="IssueTran" ToRole="BookIssued" />
+        </EntityType>
+        <EntityType Name="LibraryMember">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Age" Type="Int16" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="65" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PostalCode" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="DocumentNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DocumentType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AltPhoneNumber" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DueTrans" Relationship="Self.FK__DueTran__Custome__36B12243" FromRole="LibraryMember" ToRole="DueTran" />
+          <NavigationProperty Name="IssueTrans" Relationship="Self.FK__IssueTran__Custo__35BCFE0A" FromRole="LibraryMember" ToRole="IssueTran" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="BookRequested">
+          <Key>
+            <PropertyRef Name="RequestedBookTitle" />
+            <PropertyRef Name="RequestedBookAuthor" />
+          </Key>
+          <Property Name="RequestedBookTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RequestedBookAuthor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RequestedBookRemarks" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK__BookIssued__68487DD7">
+          <End Role="BookList" Type="Self.BookList" Multiplicity="1" />
+          <End Role="BookIssued" Type="Self.BookIssued" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookList">
+              <PropertyRef Name="BookTitle" />
+              <PropertyRef Name="ISBN" />
+            </Principal>
+            <Dependent Role="BookIssued">
+              <PropertyRef Name="BookTitle" />
+              <PropertyRef Name="ISBN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DueTran__Custome__36B12243">
+          <End Role="LibraryMember" Type="Self.LibraryMember" Multiplicity="1" />
+          <End Role="DueTran" Type="Self.DueTran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryMember">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="DueTran">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__IssueTran__Custo__35BCFE0A">
+          <End Role="LibraryMember" Type="Self.LibraryMember" Multiplicity="1" />
+          <End Role="IssueTran" Type="Self.IssueTran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryMember">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="IssueTran">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Lib24Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BookIssueds" EntityType="Self.BookIssued" />
+          <EntitySet Name="BookLists" EntityType="Self.BookList" />
+          <EntitySet Name="DueTrans" EntityType="Self.DueTran" />
+          <EntitySet Name="IssueTrans" EntityType="Self.IssueTran" />
+          <EntitySet Name="LibraryMembers" EntityType="Self.LibraryMember" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="BookRequesteds" EntityType="Self.BookRequested" />
+          <AssociationSet Name="FK__BookIssued__68487DD7" Association="Self.FK__BookIssued__68487DD7">
+            <End Role="BookList" EntitySet="BookLists" />
+            <End Role="BookIssued" EntitySet="BookIssueds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DueTran__Custome__36B12243" Association="Self.FK__DueTran__Custome__36B12243">
+            <End Role="LibraryMember" EntitySet="LibraryMembers" />
+            <End Role="DueTran" EntitySet="DueTrans" />
+          </AssociationSet>
+          <AssociationSet Name="FK__IssueTran__Custo__35BCFE0A" Association="Self.FK__IssueTran__Custo__35BCFE0A">
+            <End Role="LibraryMember" EntitySet="LibraryMembers" />
+            <End Role="IssueTran" EntitySet="IssueTrans" />
+          </AssociationSet>
+          <AssociationSet Name="FK__BookIssue__Trans__6E01572D" Association="Lib24Model.FK__BookIssue__Trans__6E01572D">
+            <End Role="IssueTran" EntitySet="IssueTrans" />
+            <End Role="BookIssued" EntitySet="BookIssueds" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK__BookIssue__Trans__6E01572D">
+          <End Type="Lib24Model.IssueTran" Role="IssueTran" Multiplicity="1" />
+          <End Type="Lib24Model.BookIssued" Role="BookIssued" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IssueTran">
+              <PropertyRef Name="TransactionNo" />
+            </Principal>
+            <Dependent Role="BookIssued">
+              <PropertyRef Name="TransactionNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Lib24ModelStoreContainer" CdmEntityContainer="Lib24Entities">
+          <EntitySetMapping Name="BookIssueds">
+            <EntityTypeMapping TypeName="Lib24Model.BookIssued">
+              <MappingFragment StoreEntitySet="BookIssued">
+                <ScalarProperty Name="TransactionNo" ColumnName="TransactionNo" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="BookTitle" ColumnName="BookTitle" />
+                <ScalarProperty Name="DateBorrow" ColumnName="DateBorrow" />
+                <ScalarProperty Name="DateDue" ColumnName="DateDue" />
+                <ScalarProperty Name="DateActualReturn" ColumnName="DateActualReturn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookLists">
+            <EntityTypeMapping TypeName="Lib24Model.BookList">
+              <MappingFragment StoreEntitySet="BookList">
+                <ScalarProperty Name="BookTitle" ColumnName="BookTitle" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="Genre" ColumnName="Genre" />
+                <ScalarProperty Name="TotalStock" ColumnName="TotalStock" />
+                <ScalarProperty Name="Loaned" ColumnName="Loaned" />
+                <ScalarProperty Name="BookCost" ColumnName="BookCost" />
+                <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DueTrans">
+            <EntityTypeMapping TypeName="Lib24Model.DueTran">
+              <MappingFragment StoreEntitySet="DueTran">
+                <ScalarProperty Name="DueTranID" ColumnName="DueTranID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="DueAmount" ColumnName="DueAmount" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IssueTrans">
+            <EntityTypeMapping TypeName="Lib24Model.IssueTran">
+              <MappingFragment StoreEntitySet="IssueTran">
+                <ScalarProperty Name="TransactionNo" ColumnName="TransactionNo" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LibraryMembers">
+            <EntityTypeMapping TypeName="Lib24Model.LibraryMember">
+              <MappingFragment StoreEntitySet="LibraryMember">
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
+                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="AltPhoneNumber" ColumnName="AltPhoneNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Lib24Model.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookRequesteds">
+            <EntityTypeMapping TypeName="Lib24Model.BookRequested">
+              <MappingFragment StoreEntitySet="BookRequested">
+                <ScalarProperty Name="RequestedBookTitle" ColumnName="RequestedBookTitle" />
+                <ScalarProperty Name="RequestedBookAuthor" ColumnName="RequestedBookAuthor" />
+                <ScalarProperty Name="RequestedBookRemarks" ColumnName="RequestedBookRemarks" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

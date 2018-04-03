@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="55798edf800b4f24bd0ad8d13acc6cee" Name="Diagram1">
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.BookList" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.DueTran" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.IssueTran" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.LibraryMember" Width="1.5" PointX="0.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.BookIssued" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SA45Team13bLibraryModel.BookRequested" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="SA45Team13bLibraryModel.FK__BookIssued__ISBN__1BFD2C07" ManuallyRouted="false" />
+        <AssociationConnector Association="SA45Team13bLibraryModel.FK__DueTran__Custome__36B12243" ManuallyRouted="false" />
+        <AssociationConnector Association="SA45Team13bLibraryModel.FK__BookIssue__Trans__22AA2996" ManuallyRouted="false" />
+        <AssociationConnector Association="SA45Team13bLibraryModel.FK__IssueTran__Custo__35BCFE0A" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
